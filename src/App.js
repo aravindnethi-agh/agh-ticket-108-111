@@ -8,6 +8,7 @@ import {
 import LoginPage from "./pages/user/LoginPage";
 import SignupPage from "./pages/user/SignupPage";
 import AdminDashboard from "./components/admin/AdminDashboard";
+import AdminUserDetails from "./components/admin/AdminUserDetails";
 import UserDashboard from "./components/user/UserDashboard";
 import { AppContainer } from "./App.style";
 
@@ -26,6 +27,16 @@ const App = () => {
             element={
               user && user.isAdmin ? (
                 <AdminDashboard user={user} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
+            path="/admin/user/:id"
+            element={
+              user && user.isAdmin ? (
+                <AdminUserDetails user={user} />
               ) : (
                 <Navigate to="/login" replace />
               )

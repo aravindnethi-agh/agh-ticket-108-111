@@ -16,20 +16,14 @@ export const UserItem = styled.li`
   padding: 10px;
 `;
 
-export const Button = styled.button`
-  margin-right: 10px;
-  padding: 5px 10px;
+export const KnowMoreButton = styled.button`
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
   border: none;
-  border-radius: 3px;
+  border-radius: 5px;
   cursor: pointer;
-`;
-
-export const ApproveButton = styled(Button)`
-  background-color: #28a745;
-  color: white;
-`;
-
-export const RejectButton = styled(Button)`
-  background-color: #dc3545;
-  color: white;
+  &:hover {
+    background-color: #45a049;
+  }
 `;
