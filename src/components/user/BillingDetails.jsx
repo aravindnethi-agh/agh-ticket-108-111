@@ -8,7 +8,6 @@ const BillingDetails = () => {
   
 
   const handleResubmit = () => {
-    // Logic to handle resubmission
     setBankStatus("Pending Verification")
     setPanStatus("Pending Verification")
     console.log("Resubmitting details");
