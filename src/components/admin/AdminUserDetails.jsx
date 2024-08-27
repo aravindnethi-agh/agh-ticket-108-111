@@ -26,7 +26,7 @@ const AdminUserDetails = () => {
         username: `user${id}`,
         aadhar: '123456789012',
         pan: 'ABCDE1234F',
-        email: `user${id}@example.com`,
+        email: `user${id}@gmail.com`,
         phone: '1234567890',
         address: '123 Main St, City, Country',
         status: 'pending'

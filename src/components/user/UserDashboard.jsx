@@ -7,7 +7,7 @@ const UserDashboard=({ user }) =>{
     <DashboardContainer>
       <h2>User Dashboard</h2>
       <p>Welcome, {user.username}!</p>
-      {/* Add more user-specific content here */}
+      {/* Add more user-specific content here*/}
     </DashboardContainer>
   );
 }
