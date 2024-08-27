@@ -21,7 +21,6 @@ const AdminUserDetails = () => {
     const [rejectionReason, setRejectionReason] = useState('');
   
     useEffect(() => {
-      // Mock data fetch
       setUser({
         id,
         username: `user${id}`,
