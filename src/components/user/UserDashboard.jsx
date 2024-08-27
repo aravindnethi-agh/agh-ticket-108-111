@@ -1,13 +1,15 @@
-import React from 'react';
-import { DashboardContainer } from './UserDashboard.style';
+import { DashboardContainer, WelcomeMessage,  } from './UserDashboard.style';
 
-const UserDashboard=({ user }) =>{
-    console.log(user)
+const UserDashboard = ({ user }) => {
+ 
+
   return (
     <DashboardContainer>
-      <h2>User Dashboard</h2>
-      <p>Welcome, {user.username}!</p>
-      {/* Add more user-specific content here*/}
+      
+        <WelcomeMessage>Welcome, {user.username}!</WelcomeMessage>
+        <h2>User Dashboard</h2>
+        {/* Add more user-specific content here */}
+    
     </DashboardContainer>
   );
 }
