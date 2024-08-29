@@ -2,73 +2,81 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const SidebarContainer = styled.aside`
-  background-color: #f8f9fa;
-  width: 250px;
+  background-color: #ffffff;
+  width: ${({ $isOpen }) => ($isOpen ? "240px" : "64px")};
   height: 100vh;
   position: fixed;
   top: 0;
-  left: ${({ isOpen }) => (isOpen ? "0" : "-250px")};
-  transition: left 0.3s ease;
+  left: 0;
+  transition: width 0.3s ease;
   z-index: 1000;
-
-  @media (max-width: 768px) {
-    left: ${({ isOpen }) => (isOpen ? "0" : "-250px")};
-  }
-`;
-
-export const LogoContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  position: relative;
-`;
-
-export const Logo = styled.img`
-  max-width: 150px;
-  height: auto;
-`;
-
-export const CloseButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  display: none;
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-
-  @media (max-width: 768px) {
-    display: block;
-  }
+  overflow-x: visible;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 `;
 
 export const NavList = styled.ul`
   list-style-type: none;
   padding: 0;
-  margin: 20px 0 0 0;
+  margin: 60px 0 0 0;
+  transition: margin 0.3s ease;
 `;
 
 export const NavItem = styled.li`
-  margin: 10px 0;
+  margin: 8px 0;
 `;
 
 export const NavLink = styled(Link)`
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: #333;
-  font-weight: bold;
-  padding: 10px 20px;
-  transition: background-color 0.3s ease;
+  color: #333333;
+  padding: 12px 16px;
+  // transition: background-color 0.3s ease, padding 0.3s ease;
+  background-color: ${({ $isActive }) =>
+    $isActive
+      ? "#ffcccb"
+      : "transparent"}; /* Light red background for active link */
 
   &:hover {
-    background-color: #e9ecef;
+    background-color: #ffe4e1; /* Slightly darker red on hover */
   }
 `;
 
 export const Icon = styled.span`
-  margin-right: 10px;
+  font-size: 20px;
+  min-width: 32px;
+  color: #ff0000;
+  transition: font-size 0.3s ease;
+`;
+
+export const NavText = styled.span`
+  margin-left: 16px;
+  white-space: nowrap;
+  opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
+  transition: opacity 0.3s ease;
+`;
+
+export const CollapseIcon = styled.button`
+  position: absolute;
+  right: -20px;
+  top: 20px;
+  background-color: #ffffff;
+  color: #000;
+  border: 1px solid white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+
+  &:hover {
+    background-color: red;
+    color: #ffffff;
+    border: 1px solid red;
+  }
 `;

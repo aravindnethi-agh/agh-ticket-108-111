@@ -1,34 +1,39 @@
+// App.style.js
 import styled from "styled-components";
-import { FaBars } from "react-icons/fa";
 
 export const AppContainer = styled.div`
   font-family: Arial, sans-serif;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  ${({ $isAuthRoute }) =>
+    $isAuthRoute &&
+    `
+    justify-content: center;
+    align-items: center;
+  `}
 `;
 
 export const MainContent = styled.main`
   flex-grow: 1;
-  margin-left: ${({ isSidebarOpen }) => (isSidebarOpen ? "250px" : "0")};
-  transition: margin-left 0.3s ease;
+  overflow-y: auto;
   padding: 20px;
+  transition: margin-left 0.3s ease;
 
-  @media (max-width: 768px) {
+  ${({ $isAuthRoute, $isSidebarOpen }) =>
+    !$isAuthRoute &&
+    `
+    margin-left: ${$isSidebarOpen ? "240px" : "64px"};
+  `}
+
+  ${({ $isAuthRoute }) =>
+    $isAuthRoute &&
+    `
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
     margin-left: 0;
-  }
-`;
-
-export const MenuIcon = styled(FaBars)`
-  display: block;
-  font-size: 24px;
-  cursor: pointer;
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 1001;
-  padding: 6px;
-  @media (max-width: 768px) {
-    display: block;
-  }
+    
+  `}
 `;
