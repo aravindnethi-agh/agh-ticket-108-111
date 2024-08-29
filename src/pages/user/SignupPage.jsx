@@ -7,7 +7,6 @@ const SignupPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = (data) => {
-    // Here you would typically send the data to your backend
     console.log(data);
     // For this example, we'll just log the data
   };
