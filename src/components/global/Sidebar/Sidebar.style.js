@@ -10,8 +10,22 @@ export const SidebarContainer = styled.aside`
   left: 0;
   transition: width 0.3s ease;
   z-index: 1000;
-  overflow-x: visible;
+  overflow-y: auto;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+`;
+
+export const SidebarWrapper = styled.div`
+  position: relative;
+  padding-bottom: 40px;
 `;
 
 export const NavList = styled.ul`
@@ -31,14 +45,10 @@ export const NavLink = styled(Link)`
   text-decoration: none;
   color: #333333;
   padding: 12px 16px;
-  // transition: background-color 0.3s ease, padding 0.3s ease;
   background-color: ${({ $isActive }) =>
-    $isActive
-      ? "#ffcccb"
-      : "transparent"}; /* Light red background for active link */
-
+    $isActive ? "#ffcccb" : "transparent"};
   &:hover {
-    background-color: #ffe4e1; /* Slightly darker red on hover */
+    background-color: #ffe4e1;
   }
 `;
 
@@ -58,11 +68,11 @@ export const NavText = styled.span`
 
 export const CollapseIcon = styled.button`
   position: absolute;
-  right: -20px;
-  top: 20px;
+  right: 8px;
+  top: -50px;
   background-color: #ffffff;
   color: #000;
-  border: 1px solid white;
+  border: 1px solid #e0e0e0;
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -72,11 +82,12 @@ export const CollapseIcon = styled.button`
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1001;
-  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+  transition: all 0.3s ease;
+  margin: 10px;
 
   &:hover {
-    background-color: red;
+    background-color: #ff0000;
     color: #ffffff;
-    border: 1px solid red;
+    border: 1px solid #ff0000;
   }
 `;

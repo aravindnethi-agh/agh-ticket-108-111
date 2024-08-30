@@ -1,42 +1,80 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import {
-  DashboardContainer,
-  UserList,
-  UserItem,
-  KnowMoreButton
-} from './AdminDashboard.style';
+import React from 'react';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Container, Header, Card, ChartWrapper, MetricsOverview } from './AdminDashboard.style';
+
+// Dummy data
+const dummyData = {
+  totalAffiliates: 15000,
+  totalSales: 20000,
+  earnings: 50000,
+  performance: [
+    { month: 'Jan', value: 10 },
+    { month: 'Feb', value: 20 },
+    { month: 'Mar', value: 30 },
+    { month: 'Apr', value: 40 },
+    { month: 'May', value: 50 },
+    { month: 'Jun', value: 60 },
+    { month: 'Jul', value: 70 }
+  ]
+};
 
 const AdminDashboard = () => {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    // Mock data
-    setUsers([
-      { id: 1, username: 'user1', aadhar: '123456789012', pan: 'ABCDE1234F', status: 'pending' },
-      { id: 2, username: 'user2', aadhar: '234567890123', pan: 'FGHIJ5678K', status: 'pending' },
-      { id: 3, username: 'user3', aadhar: '345678901234', pan: 'LMNOP9012Q', status: 'pending' },
-    ]);
-  }, []);
-
   return (
-    <DashboardContainer>
-      <h2>Admin Dashboard</h2>
-      <UserList>
-        {users.map(user => (
-          <UserItem key={user.id}>
-            <p>Username: {user.username}</p>
-            <p>Aadhar: {user.aadhar}</p>
-            <p>PAN: {user.pan}</p>
-            <p>Status: {user.status}</p>
-            <Link to={`/admin/user/${user.id}`}>
-              <KnowMoreButton>Know More</KnowMoreButton>
-            </Link>
-          </UserItem>
-        ))}
-      </UserList>
-    </DashboardContainer>
+    <Container>
+      <Header>
+        <h1>Admin Dashboard</h1>
+      </Header>
+      
+      <MetricsOverview>
+        <div>
+          <h2>Total Affiliates</h2>
+          <p>{dummyData.totalAffiliates.toLocaleString()}</p>
+        </div>
+        <div>
+          <h2>Total Sales</h2>
+          <p>{dummyData.totalSales.toLocaleString()}</p>
+        </div>
+        <div>
+          <h2>Earnings</h2>
+          <p>${dummyData.earnings.toLocaleString()}</p>
+        </div>
+      </MetricsOverview>
+      
+      <Card>
+        <h2>Key Metrics</h2>
+        <ChartWrapper>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={[dummyData]}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="totalAffiliates" fill="#8884d8" />
+              <Bar dataKey="totalSales" fill="#82ca9d" />
+              <Bar dataKey="earnings" fill="#ffc658" />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartWrapper>
+      </Card>
+      
+      <Card>
+        <h2>Performance Analysis</h2>
+        <ChartWrapper>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={dummyData.performance}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+            </LineChart>
+          </ResponsiveContainer>
+        </ChartWrapper>
+      </Card>
+    </Container>
   );
-}
+};
 
 export default AdminDashboard;

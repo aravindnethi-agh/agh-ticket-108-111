@@ -9,7 +9,8 @@ import {
 import LoginPage from "./pages/user/LoginPage";
 import SignupPage from "./pages/user/SignupPage";
 import AdminDashboard from "./components/admin/AdminDashboard";
-import AdminUserDetails from "./components/admin/AdminUserDetails";
+import UserManagement from "./components/admin/UserManagement";
+import UserManagementDetails from "./components/admin/UserManagementDetails";
 import UserDashboard from "./components/user/UserDashboard";
 import BillingDetails from "./components/user/BillingDetails";
 import MarketingStatusDashboard from "./components/user/MarketingStatusDashboard";
@@ -37,20 +38,30 @@ const AppContent = ({ user, setUser, isSidebarOpen, toggleSidebar }) => {
           <Route path="/login" element={<LoginPage setUser={setUser} />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route
-            path="/admin"
+            path="/admin/user-management"
             element={
               user && user.isAdmin ? (
-                <AdminDashboard user={user} />
+                <UserManagement user={user} />
               ) : (
                 <Navigate to="/login" replace />
               )
             }
           />
           <Route
-            path="/admin/user/:id"
+            path="/admin/dashboard"
             element={
               user && user.isAdmin ? (
-                <AdminUserDetails user={user} />
+                <AdminDashboard />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
+            path="/admin/user-management/:id"
+            element={
+              user && user.isAdmin ? (
+                <UserManagementDetails user={user} />
               ) : (
                 <Navigate to="/login" replace />
               )

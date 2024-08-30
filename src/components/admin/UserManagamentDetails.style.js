@@ -79,3 +79,14 @@ export const BackButton = styled.button`
     text-decoration: underline;
   }
 `;
+
+export const StatusText = styled.span`
+  color: ${(props) =>
+    props.status === "pending"
+      ? "#DAA520" /* Goldenrod */
+      : props.status === "approved"
+      ? "green"
+      : props.status === "rejected"
+      ? "red"
+      : "black"};
+`;
