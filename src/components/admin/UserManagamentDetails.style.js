@@ -90,3 +90,33 @@ export const StatusText = styled.span`
       ? "red"
       : "black"};
 `;
+
+export const DocumentContainer = styled.div`
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const DocumentViewer = styled.img`
+  width: 300px;
+  height: auto;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 5px;
+`;
+
+export const PdfViewer = styled.embed`
+  width: 100%;
+  height: 500px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+export const DocumentIframe = styled.iframe`
+  width: 100%;
+  height: 500px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;

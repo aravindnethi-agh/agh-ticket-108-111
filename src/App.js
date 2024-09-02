@@ -17,11 +17,14 @@ import MarketingStatusDashboard from "./components/user/MarketingStatusDashboard
 import Products from "./components/user/Products";
 import { AppContainer, MainContent } from "./App.style";
 import Sidebar from "./components/global/Sidebar/Sidebar";
+import UserDetailsSignupPage from "./pages/user/UserDetailsSignupPage";
 
 const AppContent = ({ user, setUser, isSidebarOpen, toggleSidebar }) => {
   const location = useLocation();
   const isAuthRoute =
-    location.pathname === "/login" || location.pathname === "/signup";
+    location.pathname === "/login" ||
+    location.pathname === "/signup" ||
+    location.pathname === "/user/signup";
 
   return (
     <AppContainer $isAuthRoute={isAuthRoute}>
@@ -37,6 +40,7 @@ const AppContent = ({ user, setUser, isSidebarOpen, toggleSidebar }) => {
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<LoginPage setUser={setUser} />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/user/signup" element={<UserDetailsSignupPage />} />
           <Route
             path="/admin/user-management"
             element={

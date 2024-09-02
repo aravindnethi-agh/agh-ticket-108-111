@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
+import axios from 'axios';
 import {
   UserDetailsContainer,
   ApproveButton,
@@ -10,7 +11,8 @@ import {
   PopupButtons,
   TextArea,
   BackButton,
-  StatusText
+  StatusText,
+  DocumentContainer,
 } from './UserManagamentDetails.style';
 
 const UserManagementDetails = () => {
@@ -22,16 +24,15 @@ const UserManagementDetails = () => {
   const [rejectionReason, setRejectionReason] = useState('');
 
   useEffect(() => {
-    setUser({
-      id,
-      username: `user${id}`,
-      aadhar: '123456789012',
-      pan: 'ABCDE1234F',
-      email: `user${id}@gmail.com`,
-      phone: '1234567890',
-      address: '123 Main St, City, Country',
-      status: 'pending'
-    });
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/users/${id}`);
+        setUser(response.data);
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      }
+    };
+    fetchUserDetails();
   }, [id]);
 
   const handleApprove = () => {
@@ -42,26 +43,50 @@ const UserManagementDetails = () => {
     setShowRejectPopup(true);
   };
 
-  const confirmApprove = () => {
-    // Send approval to backend
-    console.log('User approved');
-    setUser(prevUser => ({ ...prevUser, status: 'approved' }));
+  const confirmApprove = async () => {
+    try {
+      await axios.put(`http://localhost:5000/api/users/${user._id}/approve`, { status: 'approved' });
+      setUser((prevUser) => ({ ...prevUser, status: 'approved' }));
+    } catch (error) {
+      console.error('Error approving user:', error);
+    }
     setShowApprovePopup(false);
   };
 
-  const confirmReject = () => {
-    // Send rejection to backend with reason
-    console.log('User rejected. Reason:', rejectionReason);
-    setUser(prevUser => ({ ...prevUser, status: 'rejected' }));
+  const confirmReject = async () => {
+    try {
+      await axios.put(`http://localhost:5000/api/users/${user._id}/reject`, { status: 'rejected', rejectionReason });
+      setUser((prevUser) => ({ ...prevUser, status: 'rejected' }));
+    } catch (error) {
+      console.error('Error rejecting user:', error);
+    }
     setShowRejectPopup(false);
     setRejectionReason('');
   };
 
   const handleBack = () => {
-    navigate('/admin/user-management'); 
+    navigate('/admin/user-management');
   };
 
   if (!user) return <div>Loading...</div>;
+
+  const renderDocument = () => {
+    const { type, url } = user.document;
+    if (type.startsWith('image/')) {
+      return <img src={url} alt="User Document" style={{ maxWidth: '100%', maxHeight: '400px' }} />;
+    } else if (type === 'application/pdf' || type === 'application/msword' || type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return (
+        <iframe
+          src={url}
+          title="User Document"
+          style={{ width: '100%', height: '500px' }}
+          frameBorder="0"
+        />
+      );
+    } else {
+      return <p>Unsupported document type.</p>;
+    }
+  };
 
   return (
     <UserDetailsContainer>
@@ -69,13 +94,17 @@ const UserManagementDetails = () => {
         <FaArrowLeft /> Back
       </BackButton>
       <h2>User Details</h2>
-      <p>Username: {user.username}</p>
-      <p>Aadhar: {user.aadhar}</p>
-      <p>PAN: {user.pan}</p>
+      <p>Username: {user.firstName} {user.lastName}</p>
+      <p>Document Type: {user.document.type}</p>
       <p>Email: {user.email}</p>
-      <p>Phone: {user.phone}</p>
-      <p>Address: {user.address}</p>
+      <p>Phone: {user.mobileNumber}</p>
+      <p>Occupation: {user.occupation}</p>
       <p>Status: <StatusText status={user.status}>{user.status}</StatusText></p>
+
+      <DocumentContainer>
+        <h3>Uploaded Document:</h3>
+        {renderDocument()}
+      </DocumentContainer>
 
       {user.status === 'pending' && (
         <>
@@ -115,6 +144,6 @@ const UserManagementDetails = () => {
       )}
     </UserDetailsContainer>
   );
-}
+};
 
 export default UserManagementDetails;

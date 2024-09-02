@@ -20,7 +20,7 @@ export const StatusText = styled.span`
   color: ${(props) =>
     props.status === "pending"
       ? "#DAA520"
-      : props.status === "accepted"
+      : props.status === "approved"
       ? "green"
       : props.status === "rejected"
       ? "red"
