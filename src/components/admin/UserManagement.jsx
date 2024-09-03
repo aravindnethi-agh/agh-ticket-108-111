@@ -15,9 +15,9 @@ const UserManagement = () => {
     // Fetch data from API
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/users');
+        const response = await fetch('http://localhost:5000/api/admin/users');
         const data = await response.json();
-        setUsers(data);
+        setUsers(data.users);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -32,10 +32,10 @@ const UserManagement = () => {
       <UserList>
         {users.map(user => (
           <UserItem key={user._id}>
-            <p>Username: {user.firstName} {user.lastName}</p>
+            <p>Username: {user.firstname} {user.lastname}</p>
             <p>Email: {user.email}</p>
             <p>Mobile: {user.countryCode} {user.mobileNumber}</p>
-            <p>Status: <StatusText status={user.status}>{user.status}</StatusText></p>
+            <p>Status: <StatusText status={user.approvalStatus}>{user.approvalStatus}</StatusText></p>
             <Link to={`/admin/user-management/${user._id}`}>
               <KnowMoreButton>Know More</KnowMoreButton>
             </Link>

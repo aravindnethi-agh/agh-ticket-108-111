@@ -26,8 +26,8 @@ const UserManagementDetails = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/users/${id}`);
-        setUser(response.data);
+        const response = await axios.get(`http://localhost:5000/api/admin/users/${id}`);
+        setUser(response.data.user);
       } catch (error) {
         console.error('Error fetching user details:', error);
       }
@@ -45,7 +45,7 @@ const UserManagementDetails = () => {
 
   const confirmApprove = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/users/${user._id}/approve`, { status: 'approved' });
+      await axios.put(`http://localhost:5000/api/admin/users/${user._id}/approved`);
       setUser((prevUser) => ({ ...prevUser, status: 'approved' }));
     } catch (error) {
       console.error('Error approving user:', error);
@@ -55,7 +55,7 @@ const UserManagementDetails = () => {
 
   const confirmReject = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/users/${user._id}/reject`, { status: 'rejected', rejectionReason });
+      await axios.put(`http://localhost:5000/api/admin/users/${user._id}/declined`, { reason:rejectionReason });
       setUser((prevUser) => ({ ...prevUser, status: 'rejected' }));
     } catch (error) {
       console.error('Error rejecting user:', error);
@@ -94,22 +94,22 @@ const UserManagementDetails = () => {
         <FaArrowLeft /> Back
       </BackButton>
       <h2>User Details</h2>
-      <p>Username: {user.firstName} {user.lastName}</p>
+      <p>Username: {user.firstname} {user.lastname}</p>
       <p>Document Type: {user.document.type}</p>
       <p>Email: {user.email}</p>
       <p>Phone: {user.mobileNumber}</p>
       <p>Occupation: {user.occupation}</p>
-      <p>Status: <StatusText status={user.status}>{user.status}</StatusText></p>
+      <p>Status: <StatusText status={user.approvalStatus}>{user.approvalStatus}</StatusText></p>
 
       <DocumentContainer>
         <h3>Uploaded Document:</h3>
         {renderDocument()}
       </DocumentContainer>
 
-      {user.status === 'pending' && (
+      {user.approvalStatus === 'Pending' && (
         <>
           <ApproveButton onClick={handleApprove}>Approve</ApproveButton>
-          <RejectButton onClick={handleReject}>Reject</RejectButton>
+          <RejectButton onClick={handleReject}>Decline</RejectButton>
         </>
       )}
 

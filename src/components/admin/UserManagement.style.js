@@ -18,11 +18,11 @@ export const UserItem = styled.li`
 
 export const StatusText = styled.span`
   color: ${(props) =>
-    props.status === "pending"
+    props.status === "Pending"
       ? "#DAA520"
-      : props.status === "approved"
+      : props.status === "Approved"
       ? "green"
-      : props.status === "rejected"
+      : props.status === "Declined"
       ? "red"
       : "black"};
 `;

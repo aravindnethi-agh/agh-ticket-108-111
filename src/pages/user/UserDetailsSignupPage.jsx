@@ -12,15 +12,16 @@ const SignupForm = () => {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append('firstName', data.firstName);
-      formData.append('lastName', data.lastName);
+      formData.append('firstname', data.firstName);
+      formData.append('lastname', data.lastName);
       formData.append('email', data.email);
       formData.append('countryCode', data.countryCode);
-      formData.append('mobileNumber', data.mobileNumber);
+      formData.append('mobile', data.mobileNumber);
       formData.append('occupation', data.occupation);
+      formData.append('otp', '123');
       formData.append('document', data.document[0]);
 
-      const response = await axios.post('http://localhost:5000/api/register', formData, {
+      const response = await axios.post('http://localhost:5000/api/user/signup', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

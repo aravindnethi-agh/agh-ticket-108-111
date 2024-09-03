@@ -12,6 +12,7 @@ export const ApproveButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   margin-right: 10px;
+  margin-top: 10px;
   &:hover {
     background-color: #45a049;
   }
@@ -24,6 +25,7 @@ export const RejectButton = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
   &:hover {
     background-color: #d32f2f;
   }
@@ -82,11 +84,11 @@ export const BackButton = styled.button`
 
 export const StatusText = styled.span`
   color: ${(props) =>
-    props.status === "pending"
+    props.status === "Pending"
       ? "#DAA520" /* Goldenrod */
-      : props.status === "approved"
+      : props.status === "Approved"
       ? "green"
-      : props.status === "rejected"
+      : props.status === "Declined"
       ? "red"
       : "black"};
 `;
