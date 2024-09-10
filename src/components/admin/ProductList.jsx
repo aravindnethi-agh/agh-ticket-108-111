@@ -22,6 +22,7 @@ const ProductList = ({ products, onEdit, onRemove }) => {
             style={{ width: "100px", height: "100px", objectFit: "cover" }}
           />
           <ProductName>{product.courseName}</ProductName>
+          <ProductInfo>{product.description}</ProductInfo>
           <ProductInfo>Price: Rs.{product.pricing}</ProductInfo>
           <CommissionTable>
             <thead>
@@ -30,7 +31,7 @@ const ProductList = ({ products, onEdit, onRemove }) => {
                 <th>Commission Rate</th>
               </tr>
             </thead>
-            <tbody>
+            {/* <tbody>
               {Object.entries(product.commissionRates).map(
                 ([occupation, rate]) => (
                   <tr key={occupation}>
@@ -39,7 +40,7 @@ const ProductList = ({ products, onEdit, onRemove }) => {
                   </tr>
                 )
               )}
-            </tbody>
+            </tbody> */}
           </CommissionTable>
           <ButtonGroup>
             <EditButton onClick={() => onEdit(product)}>Edit</EditButton>

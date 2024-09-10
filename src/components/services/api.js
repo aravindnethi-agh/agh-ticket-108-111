@@ -37,7 +37,7 @@ export const addProduct = async (product) => {
         },
       }
     );
-    return response.data.data.course;
+    return response.data;
   } catch (error) {
     console.error("Error adding product:", error);
     throw error;
@@ -49,7 +49,7 @@ export const updateProduct = async (id, updatedProduct) => {
   try {
     const token = getToken();
     const response = await axios.post(
-      `${API_URL}/updateCourses/${id}`,
+      `${API_URL}/api/v1/products/updateCourses/${id}`,
       updatedProduct,
       {
         headers: {
@@ -68,7 +68,7 @@ export const updateProduct = async (id, updatedProduct) => {
 export const deleteProduct = async (id) => {
   try {
     const token = getToken();
-    await axios.delete(`${API_URL}/deleteCourse/${id}`, {
+    await axios.delete(`${API_URL}/api/v1/products/deleteCourse/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
