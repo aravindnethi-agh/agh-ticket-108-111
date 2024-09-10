@@ -26,7 +26,7 @@ const UserManagementDetails = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/admin/users/${id}`);
+        const response = await axios.get(`http://localhost:22000/api/v1/auth/agents/${id}`);
         setUser(response.data.user);
       } catch (error) {
         console.error('Error fetching user details:', error);
@@ -45,7 +45,7 @@ const UserManagementDetails = () => {
 
   const confirmApprove = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/admin/users/${user._id}/approved`);
+      await axios.put(`http://localhost:22000/api/v1/auth/agents/${user._id}/approved`);
       setUser((prevUser) => ({ ...prevUser, status: 'approved' }));
     } catch (error) {
       console.error('Error approving user:', error);
@@ -55,7 +55,7 @@ const UserManagementDetails = () => {
 
   const confirmReject = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/admin/users/${user._id}/declined`, { reason:rejectionReason });
+      await axios.put(`http://localhost:22000/api/v1/auth/agents/${user._id}/declined`, { reason:rejectionReason });
       setUser((prevUser) => ({ ...prevUser, status: 'rejected' }));
     } catch (error) {
       console.error('Error rejecting user:', error);
@@ -99,14 +99,14 @@ const UserManagementDetails = () => {
       <p>Email: {user.email}</p>
       <p>Phone: {user.mobileNumber}</p>
       <p>Occupation: {user.occupation}</p>
-      <p>Status: <StatusText status={user.approvalStatus}>{user.approvalStatus}</StatusText></p>
+      <p>Status: <StatusText status={user.agentApprovalStatus}>{user.agentApprovalStatus}</StatusText></p>
 
       <DocumentContainer>
         <h3>Uploaded Document:</h3>
         {renderDocument()}
       </DocumentContainer>
 
-      {user.approvalStatus === 'Pending' && (
+      {user.agentApprovalStatus === 'Pending' && (
         <>
           <ApproveButton onClick={handleApprove}>Approve</ApproveButton>
           <RejectButton onClick={handleReject}>Decline</RejectButton>

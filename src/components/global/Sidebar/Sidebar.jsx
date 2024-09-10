@@ -1,6 +1,11 @@
-import React from 'react';
-import { FaHome, FaChartLine, FaChevronLeft, FaChevronRight, FaUser, FaShoppingCart, FaDollarSign, FaUndo, FaBullhorn, FaBell, FaCogs, FaHeadset, FaClipboardList } from 'react-icons/fa';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { 
+  FaHome, FaChartLine, FaChevronLeft, FaChevronRight, FaUser, FaShoppingCart, 
+  FaDollarSign, FaUndo, FaBullhorn, FaBell, FaCogs, FaHeadset, FaClipboardList, 
+  FaSignOutAlt,FaPercentage // Import logout icon
+} from 'react-icons/fa';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import {
   SidebarContainer,
   NavList,
@@ -12,88 +17,100 @@ import {
   SidebarWrapper
 } from './Sidebar.style';
 
-const Sidebar = ({ isOpen, toggleSidebar, userRole }) => {
+const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(true); // Handle sidebar open/close state
+  const [userRole, setUserRole] = useState(null);
+
+  // Hide sidebar on certain routes
+  const hideSidebarRoutes = ['/login', '/signup', '/adminlogin'];
+  const shouldHideSidebar = hideSidebarRoutes.includes(location.pathname);
+
+  useEffect(() => {
+    // Check cookie values explicitly
+    const adminToken = Cookies.get('admin-token');
+    const agentToken = Cookies.get('agent-token');
+    
+    if (adminToken) {
+      setUserRole('Admin');
+    } else if (agentToken) {
+      setUserRole('Agent');
+    } else {
+      setUserRole(null);
+    }
+  }, []);
+
+  // Define links for Admin and Agent
+  const adminLinks = [
+    { to: "/admin/dashboard", icon: <FaChartLine />, text: "Dashboard" },
+    { to: "/admin/user-management", icon: <FaUser />, text: "User Management" },
+    { to: "/admin/product-management", icon: <FaShoppingCart />, text: "Product Management" },
+    { to: "/admin/percentage-management", icon: <FaPercentage />, text: "Percentage Management" },
+    { to: "/admin/payment-management", icon: <FaDollarSign />, text: "Payment Management" },
+    { to: "/admin/refund-management", icon: <FaUndo />, text: "Refund Management" },
+    { to: "/admin/campaign-management", icon: <FaBullhorn />, text: "Campaign Management" },
+    { to: "/admin/reporting-analytics", icon: <FaClipboardList />, text: "Reporting and Analytics" },
+    { to: "/admin/notifications", icon: <FaBell />, text: "Notifications" },
+    { to: "/admin/settings", icon: <FaCogs />, text: "Settings" },
+    { to: "/admin/support-feedback", icon: <FaHeadset />, text: "Support and Feedback" },
+  ];
+
+  const agentLinks = [
+    { to: "/user", icon: <FaHome />, text: "Dashboard" },
+    { to: "/billing", icon: <FaDollarSign />, text: "Billing" },
+    { to: "/marketing", icon: <FaBullhorn />, text: "Marketing" },
+    { to: "/products", icon: <FaShoppingCart />, text: "Products" },
+    { to: "/user/notifications", icon: <FaBell />, text: "Notifications" },
+    { to: "/user/settings", icon: <FaCogs />, text: "Settings" },
+    { to: "/user/support", icon: <FaHeadset />, text: "Support" },
+  ];
+
+  const links = userRole === "Admin" ? adminLinks : agentLinks;
+
+  // Logout functionality
+  const handleLogout = () => {
+    if (userRole === "Admin") {
+      Cookies.remove('admin-token');
+      navigate('/adminlogin');
+    } else if (userRole === "Agent") {
+      Cookies.remove('agent-token');
+      navigate('/login');
+    }
+    
+  };
+
+  // If no user role, or if on routes where the sidebar should be hidden, don't render it
+  if (!userRole || shouldHideSidebar) {
+    return null;
+  }
 
   return (
     <SidebarContainer $isOpen={isOpen}>
       <SidebarWrapper>
-        <CollapseIcon onClick={toggleSidebar}>
+        <CollapseIcon onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <FaChevronLeft /> : <FaChevronRight />}
         </CollapseIcon>
         <NavList>
+          {links.map((link) => (
+            <NavItem key={link.to}>
+              <NavLink 
+                to={link.to} 
+                $isActive={location.pathname === link.to} 
+                title={link.text}
+              >
+                <Icon>{link.icon}</Icon>
+                <NavText $isOpen={isOpen}>{link.text}</NavText>
+              </NavLink>
+            </NavItem>
+          ))}
+          {/* Logout Button */}
           <NavItem>
-            <NavLink to="/login" $isActive={location.pathname === '/'} title="Home">
-              <Icon><FaHome /></Icon>
-              <NavText $isOpen={isOpen}>Home</NavText>
+            <NavLink as="div" onClick={handleLogout} title="Logout">
+              <Icon><FaSignOutAlt /></Icon>
+              <NavText $isOpen={isOpen}>Logout</NavText>
             </NavLink>
           </NavItem>
-
-          {/* Admin-specific links */}
-          {userRole === 'admin' && (
-            <>
-              <NavItem>
-                <NavLink to="/admin/dashboard" $isActive={location.pathname === '/admin/dashboard'} title="Dashboard">
-                  <Icon><FaChartLine /></Icon>
-                  <NavText $isOpen={isOpen}>Dashboard</NavText>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/admin/user-management" $isActive={location.pathname === '/admin/user-management'} title="User Management">
-                  <Icon><FaUser /></Icon>
-                  <NavText $isOpen={isOpen}>User Management</NavText>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/product-management" $isActive={location.pathname === '/product-management'} title="Product Management">
-                  <Icon><FaShoppingCart /></Icon>
-                  <NavText $isOpen={isOpen}>Product Management</NavText>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/payment-management" $isActive={location.pathname === '/payment-management'} title="Payment Management">
-                  <Icon><FaDollarSign /></Icon>
-                  <NavText $isOpen={isOpen}>Payment Management</NavText>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/refund-management" $isActive={location.pathname === '/refund-management'} title="Refund Management">
-                  <Icon><FaUndo /></Icon>
-                  <NavText $isOpen={isOpen}>Refund Management</NavText>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/campaign-management" $isActive={location.pathname === '/campaign-management'} title="Campaign Management">
-                  <Icon><FaBullhorn /></Icon>
-                  <NavText $isOpen={isOpen}>Campaign Management</NavText>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/reporting-analytics" $isActive={location.pathname === '/reporting-analytics'} title="Reporting and Analytics">
-                  <Icon><FaClipboardList /></Icon>
-                  <NavText $isOpen={isOpen}>Reporting and Analytics</NavText>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/notifications" $isActive={location.pathname === '/notifications'} title="Notifications">
-                  <Icon><FaBell /></Icon>
-                  <NavText $isOpen={isOpen}>Notifications</NavText>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/settings" $isActive={location.pathname === '/settings'} title="Settings">
-                  <Icon><FaCogs /></Icon>
-                  <NavText $isOpen={isOpen}>Settings</NavText>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/support-feedback" $isActive={location.pathname === '/support-feedback'} title="Support and Feedback">
-                  <Icon><FaHeadset /></Icon>
-                  <NavText $isOpen={isOpen}>Support and Feedback</NavText>
-                </NavLink>
-              </NavItem>
-            </>
-          )}
         </NavList>
       </SidebarWrapper>
     </SidebarContainer>

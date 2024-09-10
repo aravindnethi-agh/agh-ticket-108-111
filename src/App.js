@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
-  useLocation,
 } from "react-router-dom";
+import Cookies from "js-cookie";
 import LoginPage from "./pages/user/LoginPage";
 import SignupPage from "./pages/user/SignupPage";
+import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import UserManagement from "./components/admin/UserManagement";
 import UserManagementDetails from "./components/admin/UserManagementDetails";
@@ -15,124 +16,86 @@ import UserDashboard from "./components/user/UserDashboard";
 import BillingDetails from "./components/user/BillingDetails";
 import MarketingStatusDashboard from "./components/user/MarketingStatusDashboard";
 import Products from "./components/user/Products";
-import { AppContainer, MainContent } from "./App.style";
-import Sidebar from "./components/global/Sidebar/Sidebar";
-import UserDetailsSignupPage from "./pages/user/UserDetailsSignupPage";
-
-const AppContent = ({ user, setUser, isSidebarOpen, toggleSidebar }) => {
-  const location = useLocation();
-  const isAuthRoute =
-    location.pathname === "/login" ||
-    location.pathname === "/signup" ||
-    location.pathname === "/user/signup";
-
-  return (
-    <AppContainer $isAuthRoute={isAuthRoute}>
-      {!isAuthRoute && (
-        <Sidebar
-          isOpen={isSidebarOpen}
-          toggleSidebar={toggleSidebar}
-          userRole={user?.isAdmin ? "admin" : "user"} // Pass user role to Sidebar
-        />
-      )}
-      <MainContent $isSidebarOpen={isSidebarOpen} $isAuthRoute={isAuthRoute}>
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<LoginPage setUser={setUser} />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/user/signup" element={<UserDetailsSignupPage />} />
-          <Route
-            path="/admin/user-management"
-            element={
-              user && user.isAdmin ? (
-                <UserManagement user={user} />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route
-            path="/admin/dashboard"
-            element={
-              user && user.isAdmin ? (
-                <AdminDashboard />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route
-            path="/admin/user-management/:id"
-            element={
-              user && user.isAdmin ? (
-                <UserManagementDetails user={user} />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route
-            path="/user"
-            element={
-              user && !user.isAdmin ? (
-                <UserDashboard user={user} />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route
-            path="/billing"
-            element={
-              user && !user.isAdmin ? (
-                <BillingDetails />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route
-            path="/marketing"
-            element={
-              user && !user.isAdmin ? (
-                <MarketingStatusDashboard />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route
-            path="/products"
-            element={
-              user && !user.isAdmin ? (
-                <Products />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-        </Routes>
-      </MainContent>
-    </AppContainer>
-  );
-};
+import PaymentManagement from "./components/admin/PaymentManagement";
+import PercentageManagement from "./components/admin/PercentageManagement";
+import ProductManagement from "./components/admin/ProductManagement";
+import { AdminLayout, UserLayout } from "./Layouts"; // Import the layouts
 
 const App = () => {
-  const [user, setUser] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  // Protected Route for Admin
+  const AdminProtectedRoute = ({ element: Component }) => {
+    const token = Cookies.get("admin-token");
+    if (!token) {
+      return <Navigate to="/adminlogin" />;
+    }
+    return <Component />;
+  };
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+  // Protected Route for Agent/User
+  const AgentProtectedRoute = ({ element: Component }) => {
+    const token = Cookies.get("agent-token");
+    if (!token) {
+      return <Navigate to="/login" />;
+    }
+    return <Component />;
   };
 
   return (
     <Router>
-      <AppContent
-        user={user}
-        setUser={setUser}
-        isSidebarOpen={isSidebarOpen}
-        toggleSidebar={toggleSidebar}
-      />
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/adminlogin" element={<AdminLoginPage />} />
+
+        {/* Admin protected routes with Sidebar */}
+        <Route element={<AdminLayout />}>
+          <Route
+            path="/admin/dashboard"
+            element={<AdminProtectedRoute element={AdminDashboard} />}
+          />
+          <Route
+            path="/admin/user-management"
+            element={<AdminProtectedRoute element={UserManagement} />}
+          />
+          <Route
+            path="/admin/user-management/:id"
+            element={<AdminProtectedRoute element={UserManagementDetails} />}
+          />
+          <Route
+            path="/admin/product-management"
+            element={<AdminProtectedRoute element={ProductManagement} />}
+          />
+          <Route
+            path="/admin/payment-management"
+            element={<AdminProtectedRoute element={PaymentManagement} />}
+          />
+          <Route
+            path="/admin/percentage-management"
+            element={<AdminProtectedRoute element={PercentageManagement} />}
+          />
+        </Route>
+
+        {/* Agent/User protected routes with Sidebar */}
+        <Route element={<UserLayout />}>
+          <Route
+            path="/user"
+            element={<AgentProtectedRoute element={UserDashboard} />}
+          />
+          <Route
+            path="/billing"
+            element={<AgentProtectedRoute element={BillingDetails} />}
+          />
+          <Route
+            path="/marketing"
+            element={<AgentProtectedRoute element={MarketingStatusDashboard} />}
+          />
+          <Route
+            path="/products"
+            element={<AgentProtectedRoute element={Products} />}
+          />
+        </Route>
+      </Routes>
     </Router>
   );
 };

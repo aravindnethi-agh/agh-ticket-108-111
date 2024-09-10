@@ -1,46 +1,79 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
 import {
   LoginContainer,
   Form,
   Input,
   Button,
-  ErrorMessage
-} from './LoginPage.style';
+  ErrorMessage,
+} from "./LoginPage.style";
 
-const LoginPage = ({ setUser }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const navigate = useNavigate();
+const LoginPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  
+  const navigate = useNavigate(); // Correctly use navigate hook for redirecting
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const onSubmit = (data) => {
-    if (data.username === "aghadmin" && data.password === "aghadmin123") {
-      setUser({ isAdmin: true });
-      navigate("/admin");
-    } else {
-      // Here you would typically check the user credentials against your database
-      setUser({ isAdmin: false });
-      navigate("/user");
+  const onSubmit = async (data) => {
+    try {
+      // Send a POST request to the backend API
+      const response = await axios.post("http://localhost:22000/api/v1/agent/login", {
+        email: data.email,
+        password: data.password,
+      });
+
+      // Handle the response from the server
+      if (response.data.success) {
+        // Set the token and user details in cookies
+        Cookies.set("agent-token", response.data.token, { expires: 7 });
+
+        // Update the auth state
+        setIsAuthenticated(true); // Update state to handle redirection
+      } else {
+        // Handle invalid login credentials
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("An error occurred during login. Please try again.");
     }
   };
+
+  // useEffect to handle redirection only once after authentication
+  useEffect(() => {
+    if (Cookies.get("agent-token")) {
+      navigate("/user"); // Redirect to user dashboard if token exists
+    }
+  }, [isAuthenticated, navigate]); // Dependency on isAuthenticated
 
   return (
     <LoginContainer>
       <h2>Login</h2>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Input
-          {...register("username", { required: "Username is required" })}
-          placeholder="Username"
+          {...register("email", { required: "Email is required" })}
+          placeholder="Email"
         />
-        {errors.username && <ErrorMessage>{errors.username.message}</ErrorMessage>}
-        
+        {errors.email && (
+          <ErrorMessage>{errors.email.message}</ErrorMessage>
+        )}
+
         <Input
           {...register("password", { required: "Password is required" })}
           type="password"
           placeholder="Password"
         />
-        {errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
-        
+        {errors.password && (
+          <ErrorMessage>{errors.password.message}</ErrorMessage>
+        )}
+
         <Button type="submit">Login</Button>
       </Form>
       <p>

@@ -1,16 +1,17 @@
-// App.style.js
 import styled from "styled-components";
 
 export const AppContainer = styled.div`
   font-family: Arial, sans-serif;
   display: flex;
-  height: 100vh;
-  overflow: hidden;
   ${({ $isAuthRoute }) =>
-    $isAuthRoute &&
-    `
+    $isAuthRoute
+      ? `
     justify-content: center;
     align-items: center;
+    background-color: #f9f9f9; /* Optional: Add background color to enhance visibility on auth routes */
+  `
+      : `
+    flex-direction: row; /* Ensures main content and sidebar are in a row layout */
   `}
 `;
 
@@ -19,21 +20,18 @@ export const MainContent = styled.main`
   overflow-y: auto;
   padding: 20px;
   transition: margin-left 0.3s ease;
+  height: 100%; /* Ensures full height for the content */
 
   ${({ $isAuthRoute, $isSidebarOpen }) =>
-    !$isAuthRoute &&
-    `
+    !$isAuthRoute
+      ? `
     margin-left: ${$isSidebarOpen ? "240px" : "64px"};
-  `}
-
-  ${({ $isAuthRoute }) =>
-    $isAuthRoute &&
-    `
+  `
+      : `
+    margin-left: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
-    margin-left: 0;
-    
   `}
 `;

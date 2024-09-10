@@ -1,67 +1,125 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
-import { SignupContainer, Form, Input, Button, ErrorMessage } from './SignupPage.style'
+import axios from 'axios';
+import { FormContainer, FormLabel, Input, FileInput, ErrorMessage, SubmitButton, ConfirmationMessage, RequestOtpButton } from './SignupPage.style';
 
 const SignupPage = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, formState: { errors },getValues } = useForm();
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [otpRequested, setOtpRequested] = useState(false);
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // For this example, we'll just log the data
+  const requestOtp = async (email) => {
+    try {
+      const response = await axios.post('http://localhost:22000/api/v1/auth/sendotp', { email });
+      if (response.status === 200) {
+        setOtpRequested(true);
+        setConfirmationMessage('OTP has been sent to your email.');
+      } else {
+        setConfirmationMessage('Failed to send OTP. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error requesting OTP:', error);
+      setConfirmationMessage('An error occurred while requesting OTP. Please try again.');
+    }
+  };
+
+  const onSubmit = async (data) => {
+    if (!otpRequested) {
+      setConfirmationMessage('Please request an OTP first.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('firstname', data.firstName);
+      formData.append('lastname', data.lastName);
+      formData.append('email', data.email);
+      formData.append('countryCode', data.countryCode);
+      formData.append('mobile', data.mobileNumber);
+      formData.append('occupation', data.occupation);
+      formData.append('otp', data.otp);
+      formData.append('document', data.document[0]);
+
+      const response = await axios.post('http://localhost:22000/api/v1/agent/signup', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 201) {
+        setConfirmationMessage('User details have been shared successfully. Please wait for more details.');
+        reset(); // Reset form fields
+        setOtpRequested(false);
+      } else {
+        setConfirmationMessage('Failed to register user. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error registering user:', error);
+      setConfirmationMessage('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <SignupContainer>
-      <h2>Sign Up</h2>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          {...register("username", { required: 'Username is required' })}
-          placeholder="Username"
-        />
-        {errors.username && <ErrorMessage>{errors.username.message}</ErrorMessage>}
+    <FormContainer>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormLabel>
+          First Name:
+          <Input type="text" {...register('firstName', { required: 'First name is required' })} />
+          {errors.firstName && <ErrorMessage>{errors.firstName.message}</ErrorMessage>}
+        </FormLabel>
+        <FormLabel>
+          Last Name:
+          <Input type="text" {...register('lastName', { required: 'Last name is required' })} />
+          {errors.lastName && <ErrorMessage>{errors.lastName.message}</ErrorMessage>}
+        </FormLabel>
+        <FormLabel>
+          Email:
+          <Input type="email" {...register('email', { 
+            required: 'Email is required', 
+            pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' } 
+          })} />
+          {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
+        </FormLabel>
         
-        <Input
-          {...register("password", { 
-            required: 'Password is required', 
-            minLength: { value: 8, message: 'Password must be at least 8 characters' } 
-          })}
-          type="password"
-          placeholder="Password"
-        />
-        {errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
-        
-        <Input
-          {...register("aadhar", { 
-            required: 'Aadhar Card Number is required',
-            pattern: { 
-              value: /^\d{12}$/, 
-              message: 'Aadhar Card Number must be 12 digits' 
-            }
-          })}
-          placeholder="Aadhar Card Number"
-        />
-        {errors.aadhar && <ErrorMessage>{errors.aadhar.message}</ErrorMessage>}
-        
-        <Input
-          {...register("pan", { 
-            required: 'PAN Card Number is required',
-            pattern: { 
-              value: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 
-              message: 'Invalid PAN Card Number' 
-            }
-          })}
-          placeholder="PAN Card Number"
-        />
-        {errors.pan && <ErrorMessage>{errors.pan.message}</ErrorMessage>}
-        
-        <Button type="submit">Sign Up</Button>
-      </Form>
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
-    </SignupContainer>
+        <FormLabel>
+          Country Code:
+          <Input type="text" {...register('countryCode', { required: 'Country code is required' })} />
+          {errors.countryCode && <ErrorMessage>{errors.countryCode.message}</ErrorMessage>}
+        </FormLabel>
+        <FormLabel>
+          Mobile Number:
+          <Input type="text" {...register('mobileNumber', { required: 'Mobile number is required' })} />
+          {errors.mobileNumber && <ErrorMessage>{errors.mobileNumber.message}</ErrorMessage>}
+        </FormLabel>
+        <FormLabel>
+          Occupation:
+          <Input type="text" {...register('occupation', { required: 'Occupation is required' })} />
+          {errors.occupation && <ErrorMessage>{errors.occupation.message}</ErrorMessage>}
+        </FormLabel>
+        <FormLabel>
+          OTP:
+          <Input type="text" {...register('otp', { required: 'OTP is required' })} />
+          {errors.otp && <ErrorMessage>{errors.otp.message}</ErrorMessage>}
+        </FormLabel>
+        <FormLabel>
+          Document:
+          <FileInput type="file" {...register('document', { required: 'Document is required' })} />
+          {errors.document && <ErrorMessage>{errors.document.message}</ErrorMessage>}
+        </FormLabel>
+        <RequestOtpButton type="button" onClick={() => requestOtp(getValues().email)}>
+          Request OTP
+        </RequestOtpButton>
+        <SubmitButton type="submit" disabled={loading}>
+          {loading ? 'Submitting...' : 'Sign Up'}
+        </SubmitButton>
+      </form>
+      {confirmationMessage && <ConfirmationMessage>{confirmationMessage}</ConfirmationMessage>}
+    </FormContainer>
   );
-}
+};
 
 export default SignupPage;
