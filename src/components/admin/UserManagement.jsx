@@ -15,7 +15,7 @@ const UserManagement = () => {
     // Fetch data from API
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:22000/api/v1/auth/agents');
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/agents`);
         const data = await response.json();
         setUsers(data.users);
       } catch (error) {

@@ -30,7 +30,7 @@ const UserDashboard = () => {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.id;
       
-      const response = await axios.get(`http://localhost:22000/api/v1/affiliates/dashboard/${userId}`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/affiliates/dashboard/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -66,7 +66,7 @@ const UserDashboard = () => {
       {courseDetails.length > 0 ? (
         courseDetails.map((link, index) => (
           <CourseCard key={index}>
-            <CourseName>{link.courseName.name}</CourseName>
+            <CourseName>{link.courseName.courseName}</CourseName>
             <CourseTiming>
               {link.courseBoughtTimings.map((timing, idx) => (
                 <div key={idx}>

@@ -26,7 +26,7 @@ const UserManagementDetails = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:22000/api/v1/auth/agents/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/auth/agents/${id}`);
         setUser(response.data.user);
       } catch (error) {
         console.error('Error fetching user details:', error);
@@ -45,7 +45,7 @@ const UserManagementDetails = () => {
 
   const confirmApprove = async () => {
     try {
-      await axios.put(`http://localhost:22000/api/v1/auth/agents/${user._id}/approved`);
+      await axios.put(`${process.env.REACT_APP_API_URL}/auth/agents/${user._id}/approved`);
       setUser((prevUser) => ({ ...prevUser, status: 'approved' }));
     } catch (error) {
       console.error('Error approving user:', error);
@@ -55,7 +55,7 @@ const UserManagementDetails = () => {
 
   const confirmReject = async () => {
     try {
-      await axios.put(`http://localhost:22000/api/v1/auth/agents/${user._id}/declined`, { reason:rejectionReason });
+      await axios.put(`${process.env.REACT_APP_API_URL}/auth/agents/${user._id}/declined`, { reason:rejectionReason });
       setUser((prevUser) => ({ ...prevUser, status: 'rejected' }));
     } catch (error) {
       console.error('Error rejecting user:', error);

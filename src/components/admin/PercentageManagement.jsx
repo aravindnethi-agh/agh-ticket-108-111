@@ -25,7 +25,7 @@ const PercentageManagement = () => {
     const token = Cookies.get('admin-token');
     try {
       const response = await axios.post(
-        'http://localhost:22000/api/v1/affiliates/updatePercentageforoccupations',
+        `${process.env.REACT_APP_API_URL}/affiliates/updatePercentageforoccupations`,
         { occupation, values },
         {
           headers: {
@@ -47,7 +47,7 @@ const PercentageManagement = () => {
     const token = Cookies.get('admin-token');
     try {
       const response = await axios.post(
-        'http://localhost:22000/api/v1/affiliates/updatePercentageforProducts',
+        `${process.env.REACT_APP_API_URL}/affiliates/updatePercentageforProducts`,
         { productId, percentage },
         {
           headers: {
@@ -69,7 +69,7 @@ const PercentageManagement = () => {
     const token = Cookies.get('admin-token');
     try {
       const response = await axios.post(
-        'http://localhost:22000/api/v1/affiliates/updatePercentageforIndividual',
+        `${process.env.REACT_APP_API_URL}/affiliates/updatePercentageforIndividual`,
         { UserID: individualUserId, percentage },
         {
           headers: {

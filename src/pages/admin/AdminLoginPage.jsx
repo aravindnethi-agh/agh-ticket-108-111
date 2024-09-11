@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -20,13 +20,17 @@ const AdminLoginPage = () => {
   } = useForm();
   const navigate = useNavigate();
   const [otpSent, setOtpSent] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  useEffect(() => {
+    if (Cookies.get("admin-token")) {
+      navigate("/admin/dashboard");
+    }
+  }, [navigate]);
 
   const sendOtp = async (email) => {
     try {
       const response = await axios.post(
-        "http://localhost:22000/api/v1/auth/sendotp",
+        `${process.env.REACT_APP_API_URL}/auth/sendotp`,
         { email },
         {
           headers: {
@@ -34,10 +38,10 @@ const AdminLoginPage = () => {
           }
         }
       );
+      
       if (response.data.success) {
-        setError("otp", { message: "OTP sent to your email." }); // Inform user OTP was sent
+        setError("otp", { message: "OTP sent to your email." });
         setOtpSent(true);
-        setIsAuthenticated(true); 
       } else {
         alert(response.data.message || "Failed to send OTP.");
       }
@@ -49,12 +53,11 @@ const AdminLoginPage = () => {
 
   const onSubmit = async (data) => {
     try {
-      // Send a POST request to the backend API for login
       const response = await axios.post(
-        "http://localhost:22000/api/v1/auth/adminlogin",
+        `${process.env.REACT_APP_API_URL}/auth/adminlogin`,
         {
           email: data.email,
-          otp: data.otp, // Use OTP from input
+          otp: data.otp,
           password: data.password,
         },
         {
@@ -64,11 +67,9 @@ const AdminLoginPage = () => {
         }
       );
 
-      // Handle the response from the server
       if (response.data.success) {
-        Cookies.set("admin-token", response.data.token, { expires: 7 }); // Set JWT token
-        
-        // Redirect the user based on their account type
+        Cookies.set("admin-token", response.data.token, { expires: 7 });
+        navigate("/admin/dashboard"); // Navigate immediately after successful login
       } else {
         alert(response.data.message);
       }
@@ -77,12 +78,7 @@ const AdminLoginPage = () => {
       alert("An error occurred during login. Please try again.");
     }
   };
-
-  useEffect(() => {
-    if (Cookies.get("admin-token")) {
-      navigate("/admin/dashboard"); // Redirect to user dashboard if token exists
-    }
-  }, [isAuthenticated, navigate]);
+  
   return (
     <LoginContainer>
       <h2>Admin Login</h2>
@@ -98,7 +94,7 @@ const AdminLoginPage = () => {
           onClick={() =>
             sendOtp(document.querySelector("input[name='email']").value)
           }
-          disabled={otpSent} // Disable if OTP is already sent
+          disabled={otpSent}
         >
           {otpSent ? "OTP Sent" : "Send OTP"}
         </Button>

@@ -11,7 +11,7 @@ const SignupPage = () => {
 
   const requestOtp = async (email) => {
     try {
-      const response = await axios.post('http://localhost:22000/api/v1/auth/sendotp', { email });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/sendotp`, { email });
       if (response.status === 200) {
         setOtpRequested(true);
         setConfirmationMessage('OTP has been sent to your email.');
@@ -42,7 +42,7 @@ const SignupPage = () => {
       formData.append('otp', data.otp);
       formData.append('document', data.document[0]);
 
-      const response = await axios.post('http://localhost:22000/api/v1/agent/signup', formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/agent/signup`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

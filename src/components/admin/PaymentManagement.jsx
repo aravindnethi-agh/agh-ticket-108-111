@@ -16,7 +16,7 @@ const PaymentManagement = () => {
     try {
       const token = Cookies.get('admin-token'); // Get token from Cookies
 
-      const response = await axios.get(`http://localhost:22000/api/v1/affiliates/commission/${userId}/${courseId}`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/affiliates/commission/${userId}/${courseId}`, {
         headers: {
           Authorization: `Bearer ${token}`, // Use token from Cookies
         },

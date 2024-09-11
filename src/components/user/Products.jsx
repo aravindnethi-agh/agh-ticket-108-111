@@ -19,7 +19,7 @@ const Products = () => {
           return;
         }
 
-        const response = await axios.get('http://localhost:22000/api/v1/affiliates/products', {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/affiliates/products`, {
           headers: {
             Authorization: `Bearer ${token}`, // Use token from Cookies
           },
