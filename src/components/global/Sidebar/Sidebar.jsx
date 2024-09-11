@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   FaHome, FaChartLine, FaChevronLeft, FaChevronRight, FaUser, FaShoppingCart, 
-  FaDollarSign, FaUndo, FaBullhorn, FaBell, FaCogs, FaHeadset, FaClipboardList, 
+  FaDollarSign, FaUndo, FaHistory, FaBullhorn, FaBell, FaCogs, FaHeadset, FaClipboardList, 
   FaSignOutAlt,FaPercentage // Import logout icon
 } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -64,6 +64,8 @@ const Sidebar = () => {
     { to: "/user/notifications", icon: <FaBell />, text: "Notifications" },
     { to: "/user/settings", icon: <FaCogs />, text: "Settings" },
     { to: "/user/support", icon: <FaHeadset />, text: "Support" },
+    { to: "/commission", icon: <FaPercentage />, text: "Commission" },
+    { to: "/history", icon: <FaHistory />, text: "History" },
   ];
 
   const links = userRole === "Admin" ? adminLinks : agentLinks;

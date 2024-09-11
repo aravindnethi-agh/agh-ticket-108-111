@@ -20,6 +20,8 @@ import Products from "./components/user/Products";
 import PaymentManagement from "./components/admin/PaymentManagement";
 import PercentageManagement from "./components/admin/PercentageManagement";
 import ProductManagement from "./components/admin/ProductManagement";
+import CommissionDetails from "./components/user/CommissionDetails";
+import PaymentHistory from "./components/user/PaymentHistory";
 import { AdminLayout, UserLayout } from "./Layouts";
 
 // Global authentication check
@@ -114,6 +116,17 @@ const App = () => {
               path="/products"
               element={<AgentProtectedRoute element={Products} />}
             />
+            
+            <Route
+              path="/commission"
+              element={<AgentProtectedRoute element={CommissionDetails} />}
+            />
+
+            <Route
+              path="/history"
+              element={<AgentProtectedRoute element={PaymentHistory} />}
+            />
+
           </Route>
 
           {/* Catch-all route */}
