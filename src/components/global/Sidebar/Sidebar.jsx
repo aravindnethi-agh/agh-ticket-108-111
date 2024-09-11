@@ -4,6 +4,8 @@ import {
   FaDollarSign, FaUndo, FaBullhorn, FaBell, FaCogs, FaHeadset, FaClipboardList, 
   FaSignOutAlt,FaPercentage // Import logout icon
 } from 'react-icons/fa';
+import { TbReportMoney,TbPigMoney } from "react-icons/tb";
+import { MdNotificationsActive } from "react-icons/md";
 import { useLocation, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import {
@@ -54,6 +56,8 @@ const Sidebar = () => {
     { to: "/admin/notifications", icon: <FaBell />, text: "Notifications" },
     { to: "/admin/settings", icon: <FaCogs />, text: "Settings" },
     { to: "/admin/support-feedback", icon: <FaHeadset />, text: "Support and Feedback" },
+    { to: "/admin/get-notification", icon : <MdNotificationsActive/>, text: "Get Notification"},
+    { to: "/admin/send-notification", icon: <MdNotificationsActive/>,  text: "Send Notification"},
   ];
 
   const agentLinks = [
@@ -64,6 +68,8 @@ const Sidebar = () => {
     { to: "/user/notifications", icon: <FaBell />, text: "Notifications" },
     { to: "/user/settings", icon: <FaCogs />, text: "Settings" },
     { to: "/user/support", icon: <FaHeadset />, text: "Support" },
+    { to: '/user/status-of-pendingpayement', icon: <TbReportMoney/> , text: "Pending Payment"},
+    { to: "/user/earnings", icon: <TbPigMoney/>, text: "Earnings"},
   ];
 
   const links = userRole === "Admin" ? adminLinks : agentLinks;

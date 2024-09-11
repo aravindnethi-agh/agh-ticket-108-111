@@ -21,6 +21,10 @@ import PaymentManagement from "./components/admin/PaymentManagement";
 import PercentageManagement from "./components/admin/PercentageManagement";
 import ProductManagement from "./components/admin/ProductManagement";
 import { AdminLayout, UserLayout } from "./Layouts";
+import GetNotifications from "./components/admin/GetNotifications";
+import SendNotification from "./components/admin/SendNotification";
+import TotalPayment from "./components/user/TotalPayment";
+import PendingPaymentStatus from "./components/user/PendingPaymentStatus";
 
 // Global authentication check
 const AuthWrapper = ({ children }) => {
@@ -92,6 +96,15 @@ const App = () => {
               path="/admin/percentage-management"
               element={<AdminProtectedRoute element={PercentageManagement} />}
             />
+            <Route
+              path="/admin/get-notification"
+              element={<AdminProtectedRoute element={GetNotifications}/>}
+            />
+            <Route 
+              path="/admin/send-notification"
+              element={<AdminProtectedRoute element={SendNotification}/>}
+            />
+
           </Route>
 
           {/* Agent/User protected routes with Sidebar */}
@@ -114,6 +127,15 @@ const App = () => {
               path="/products"
               element={<AgentProtectedRoute element={Products} />}
             />
+            <Route 
+              path="/user/status-of-pendingpayement"
+              element={<AgentProtectedRoute element={PendingPaymentStatus}/>}
+            />
+            <Route 
+              path="/user/earnings"
+              element={<AgentProtectedRoute element={TotalPayment}/>}
+            />
+              
           </Route>
 
           {/* Catch-all route */}
