@@ -20,6 +20,8 @@ import Products from "./components/user/Products";
 import PaymentManagement from "./components/admin/PaymentManagement";
 import PercentageManagement from "./components/admin/PercentageManagement";
 import ProductManagement from "./components/admin/ProductManagement";
+import CommissionDetails from "./components/user/CommissionDetails";
+import PaymentHistory from "./components/user/PaymentHistory";
 import { AdminLayout, UserLayout } from "./Layouts";
 import GetNotifications from "./components/admin/GetNotifications";
 import SendNotification from "./components/admin/SendNotification";
@@ -134,8 +136,7 @@ const App = () => {
             <Route 
               path="/user/earnings"
               element={<AgentProtectedRoute element={TotalPayment}/>}
-            />
-              
+            />
           </Route>
 
           {/* Catch-all route */}

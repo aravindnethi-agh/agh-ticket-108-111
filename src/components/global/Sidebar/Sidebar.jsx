@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   FaHome, FaChartLine, FaChevronLeft, FaChevronRight, FaUser, FaShoppingCart, 
-  FaDollarSign, FaUndo, FaBullhorn, FaBell, FaCogs, FaHeadset, FaClipboardList, 
+  FaDollarSign, FaUndo, FaHistory, FaBullhorn, FaBell, FaCogs, FaHeadset, FaClipboardList, 
   FaSignOutAlt,FaPercentage // Import logout icon
 } from 'react-icons/fa';
 import { TbReportMoney,TbPigMoney } from "react-icons/tb";
